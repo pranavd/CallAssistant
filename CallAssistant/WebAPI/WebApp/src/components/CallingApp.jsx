@@ -11,14 +11,35 @@ let callCaptions;
 
 const CallingApp = () => {
     const [meetingLink, setMeetingLink] = useState('');
-    const [enableCaption, setEnableCaption] = useState(false);
+    const [botDisplayName, setBotDisplayName] = useState('');
+
+    const [enabledCaptions, setEnabledCaptions] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [isCallConnected, setIsCallConnected] = useState(false);
+
     const [captions, setCaptions] = useState([]);
     const [notifications, setNotifications] = useState([]);
 
     // Add ref for the captions container
     const captionsContainerRef = useRef(null);
 
-    // Effect to scroll to bottom when captions change
+    useEffect(() => {
+        if (isRecording) {
+            setNotifications([
+                ...notifications,
+                { id: Math.random(), message: 'Recording Started' }
+            ]);
+            if (isCallConnected && !enabledCaptions) {
+                enableCaptions();
+            }
+        } else {
+            setNotifications([
+                ...notifications,
+                { id: Math.random(), message: 'Recording Stopped' }
+            ]);
+        }
+    }, [isRecording])
+
     useEffect(() => {
         if (captionsContainerRef.current && captions.length > 0) {
             captionsContainerRef.current.scrollTop = captionsContainerRef.current.scrollHeight;
@@ -51,23 +72,63 @@ const CallingApp = () => {
         }
     };
 
-    const startCaption = async () => {
+    const joinTeamsMeeting = async (token) => {
+        const callClient = new CallClient();
+        const tokenCredential = new AzureCommunicationTokenCredential(token);
+        callAgent = await callClient.createCallAgent(tokenCredential, { displayName: botDisplayName });
+        call = callAgent.join({ meetingLink: meetingLink }, {});
+
+        setNotifications([
+            ...notifications,
+            { id: Math.random(), message: 'Joined meeting successfully.' }
+        ]);
+
+        callCaptions = call.feature(Features.Captions).captions
+
+        callCaptions.on('CaptionsActiveChanged', () => {
+            captionsActiveHandler();
+        });
+
+        callCaptions.on('CaptionsReceived', (captionData) => {
+            captionsReceivedHandler(captionData);
+        });
+
+        call.on('stateChanged', () => {
+            onCallStateChanged()
+        });
+
+        call.feature(Features.Recording).on('isRecordingActiveChanged', () => {
+            onCallRecordingChanged();
+        });
+    }
+
+    const enableCaptions = async () => {
         try {
-            setNotifications([
-                ...notifications,
-                { id: Math.random(), message: 'Starting captions' }
-            ]);
+            if (isCallConnected) {
+                setNotifications([
+                    ...notifications,
+                    { id: Math.random(), message: 'Starting captions' }
+                ]);
 
-            callCaptions = call.feature(Features.Captions).captions
-            const startCaptionsResult = await callCaptions.startCaptions({ spokenLanguage: 'en-us' });
-
-            callCaptions.on('CaptionsActiveChanged', () => {
-                captionsActiveHandler();
-            });
-
-            callCaptions.on('CaptionsReceived', (captionData) => {
-                captionsReceivedHandler(captionData);
-            });
+                try {
+                    await callCaptions.startCaptions({ spokenLanguage: 'en-us' });
+                    setNotifications([
+                        ...notifications,
+                        { id: Math.random(), message: 'Captions Started' }
+                    ]);
+                    setEnabledCaptions(true);
+                } catch (error) {
+                    setNotifications([
+                        ...notifications,
+                        { id: Math.random(), message: `Captions Failed: ${JSON.stringify(error)}` }
+                    ]);
+                }
+            } else {
+                setNotifications([
+                    ...notifications,
+                    { id: Math.random(), message: 'Captions cannot be started, Call should be Connected and Recording should be Started' }
+                ]);
+            }
         } catch (error) {
             setNotifications([
                 ...notifications,
@@ -86,28 +147,6 @@ const CallingApp = () => {
             ]);
         }
     };
-
-    const joinTeamsMeeting = async (token) => {
-        const callClient = new CallClient();
-        const tokenCredential = new AzureCommunicationTokenCredential(token);
-        callAgent = await callClient.createCallAgent(tokenCredential, { displayName: 'ACS user' });
-        call = callAgent.join({ meetingLink: meetingLink }, {});
-
-        setNotifications([
-            ...notifications,
-            { id: Math.random(), message: 'Joined meeting successfully.' }
-        ]);
-
-        setEnableCaption(true);
-
-        call.on('stateChanged', () => {
-            onCallStateChanged()
-        });
-
-        call.feature(Features.Recording).on('isRecordingActiveChanged', () => {
-            onCallRecordingChanged();
-        });
-    }
 
     const captionsReceivedHandler = (captionData) => {
         if (captionData.resultType === "Final") {
@@ -128,7 +167,7 @@ const CallingApp = () => {
         if (callCaptions.isCaptionsFeatureActive) {
             setNotifications([
                 ...notifications,
-                { id: Math.random(), message: 'Started captions' }
+                { id: Math.random(), message: `Captions Feature: ${callCaptions.isCaptionsFeatureActive}` }
             ]);
         }
     }
@@ -139,12 +178,23 @@ const CallingApp = () => {
                 ...notifications,
                 { id: Math.random(), message: call.state }
             ]);
+
+            if (call.state === "Connected") {
+                setIsCallConnected(true);
+            }
         }
     }
 
     const onCallRecordingChanged = (event) => {
         if (call) {
-            console.log('call state', call.feature(Features.Recording));
+            if (call.state === "Connected") {
+                if (call.feature(Features.Recording).isRecordingActive) {
+
+                    setIsRecording(true);
+                } else {
+                    setIsRecording(false);
+                }
+            }
         }
     }
 
@@ -171,6 +221,16 @@ const CallingApp = () => {
                             value={meetingLink}
                             onChange={e => setMeetingLink(e.target.value)}
                         />
+                        <label className="block text-lg font-semibold mb-2 text-center">
+                            Enter Bot Display Name
+                        </label>
+                        <input
+                            type="text"
+                            className="w-full border border-gray-300 rounded px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Bot Name..."
+                            value={botDisplayName}
+                            onChange={e => setBotDisplayName(e.target.value)}
+                        />
                         <div className="flex justify-center gap-2 mb-2">
                             <button
                                 className="min-w-[120px] max-w-[160px] bg-green-600 text-white font-bold py-2 rounded hover:bg-green-700 transition"
@@ -189,8 +249,8 @@ const CallingApp = () => {
                         </div>
                         <button
                             className="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition mt-2"
-                            onClick={startCaption}
-                            disabled={!enableCaption}
+                            onClick={enableCaptions}
+                            disabled={!isCallConnected && !isRecording}
                         >
                             Start Live Captions
                         </button>
