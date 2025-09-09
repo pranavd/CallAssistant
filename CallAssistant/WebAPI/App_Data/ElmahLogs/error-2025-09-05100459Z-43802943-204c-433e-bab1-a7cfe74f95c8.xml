@@ -1,0 +1,169 @@
+﻿<error errorId="43802943-204c-433e-bab1-a7cfe74f95c8" application="/LM/W3SVC/3/ROOT" host="PF4P5BPF" type="System.Exception" message="[{&quot;id&quot;:&quot;4361163f-d9aa-447c-b423-ea29472bb3a9&quot;,&quot;topic&quot;:&quot;/subscriptions/1176253a-ca5a-47de-ae3f-15785423544c/resourcegroups/oncallbotrg/providers/microsoft.communication/communicationservices/oncallbot-acs&quot;,&quot;subject&quot;:&quot;call/aHR0cHM6Ly9hcGkuZmxpZ2h0cHJveHkuc2t5cGUuY29tL2FwaS92Mi9jcC9jb252LW1hc28tMDMtcHJvZC1ha3MuY29udi5za3lwZS5jb20vY29udi9JRGZXUWpacWJVU19jUGFFWU84bEZRP2k9MTAtMTI4LTE4LTEzNyZlPTYzODkyMjEyNzc4NjE4NTI2Nw/startedBy/8:acs:77584a7d-4220-4345-95f9-026bda783e22_00000029-b936-2f69-e947-09bd45603811&quot;,&quot;data&quot;:{&quot;startedBy&quot;:{&quot;communicationIdentifier&quot;:{&quot;kind&quot;:&quot;communicationUser&quot;,&quot;rawId&quot;:&quot;8:acs:77584a7d-4220-4345-95f9-026bda783e22_00000029-b936-2f69-e947-09bd45603811&quot;,&quot;communicationUser&quot;:{&quot;id&quot;:&quot;8:acs:77584a7d-4220-4345-95f9-026bda783e22_00000029-b936-2f69-e947-09bd45603811&quot;}}},&quot;serverCallId&quot;:&quot;aHR0cHM6Ly9hcGkuZmxpZ2h0cHJveHkuc2t5cGUuY29tL2FwaS92Mi9jcC9jb252LW1hc28tMDMtcHJvZC1ha3MuY29udi5za3lwZS5jb20vY29udi9JRGZXUWpacWJVU19jUGFFWU84bEZRP2k9MTAtMTI4LTE4LTEzNyZlPTYzODkyMjEyNzc4NjE4NTI2Nw&quot;,&quot;group&quot;:{&quot;id&quot;:&quot;00000000-0000-0000-0000-000000000000&quot;},&quot;isTwoParty&quot;:false,&quot;correlationId&quot;:&quot;f579f879-135e-4138-a6a3-0ec6f3f4810b&quot;,&quot;isRoomsCall&quot;:false},&quot;eventType&quot;:&quot;Microsoft.Communication.CallStarted&quot;,&quot;dataVersion&quot;:&quot;1.0&quot;,&quot;metadataVersion&quot;:&quot;1&quot;,&quot;eventTime&quot;:&quot;2025-09-05T10:04:55.8520858Z&quot;}]" detail="System.Exception: [{&quot;id&quot;:&quot;4361163f-d9aa-447c-b423-ea29472bb3a9&quot;,&quot;topic&quot;:&quot;/subscriptions/1176253a-ca5a-47de-ae3f-15785423544c/resourcegroups/oncallbotrg/providers/microsoft.communication/communicationservices/oncallbot-acs&quot;,&quot;subject&quot;:&quot;call/aHR0cHM6Ly9hcGkuZmxpZ2h0cHJveHkuc2t5cGUuY29tL2FwaS92Mi9jcC9jb252LW1hc28tMDMtcHJvZC1ha3MuY29udi5za3lwZS5jb20vY29udi9JRGZXUWpacWJVU19jUGFFWU84bEZRP2k9MTAtMTI4LTE4LTEzNyZlPTYzODkyMjEyNzc4NjE4NTI2Nw/startedBy/8:acs:77584a7d-4220-4345-95f9-026bda783e22_00000029-b936-2f69-e947-09bd45603811&quot;,&quot;data&quot;:{&quot;startedBy&quot;:{&quot;communicationIdentifier&quot;:{&quot;kind&quot;:&quot;communicationUser&quot;,&quot;rawId&quot;:&quot;8:acs:77584a7d-4220-4345-95f9-026bda783e22_00000029-b936-2f69-e947-09bd45603811&quot;,&quot;communicationUser&quot;:{&quot;id&quot;:&quot;8:acs:77584a7d-4220-4345-95f9-026bda783e22_00000029-b936-2f69-e947-09bd45603811&quot;}}},&quot;serverCallId&quot;:&quot;aHR0cHM6Ly9hcGkuZmxpZ2h0cHJveHkuc2t5cGUuY29tL2FwaS92Mi9jcC9jb252LW1hc28tMDMtcHJvZC1ha3MuY29udi5za3lwZS5jb20vY29udi9JRGZXUWpacWJVU19jUGFFWU84bEZRP2k9MTAtMTI4LTE4LTEzNyZlPTYzODkyMjEyNzc4NjE4NTI2Nw&quot;,&quot;group&quot;:{&quot;id&quot;:&quot;00000000-0000-0000-0000-000000000000&quot;},&quot;isTwoParty&quot;:false,&quot;correlationId&quot;:&quot;f579f879-135e-4138-a6a3-0ec6f3f4810b&quot;,&quot;isRoomsCall&quot;:false},&quot;eventType&quot;:&quot;Microsoft.Communication.CallStarted&quot;,&quot;dataVersion&quot;:&quot;1.0&quot;,&quot;metadataVersion&quot;:&quot;1&quot;,&quot;eventTime&quot;:&quot;2025-09-05T10:04:55.8520858Z&quot;}]" time="2025-09-05T10:04:59.2547608Z">
+  <serverVariables>
+    <item name="ALL_HTTP">
+      <value string="HTTP_CONTENT_LENGTH:1280&#xD;&#xA;HTTP_CONTENT_TYPE:application/json; charset=utf-8&#xD;&#xA;HTTP_ACCEPT_ENCODING:gzip&#xD;&#xA;HTTP_HOST:localhost:12755&#xD;&#xA;HTTP_AEG_DATA_VERSION:1.0&#xD;&#xA;HTTP_AEG_DELIVERY_COUNT:0&#xD;&#xA;HTTP_AEG_EVENT_TYPE:Notification&#xD;&#xA;HTTP_AEG_METADATA_VERSION:1&#xD;&#xA;HTTP_AEG_SUBSCRIPTION_NAME:ALL-EVENTS&#xD;&#xA;HTTP_X_FORWARDED_FOR:20.189.108.187&#xD;&#xA;HTTP_X_FORWARDED_HOST:7cd1c703a1eb.ngrok-free.app&#xD;&#xA;HTTP_X_FORWARDED_PROTO:https&#xD;&#xA;" />
+    </item>
+    <item name="ALL_RAW">
+      <value string="Content-Length: 1280&#xD;&#xA;Content-Type: application/json; charset=utf-8&#xD;&#xA;Accept-Encoding: gzip&#xD;&#xA;Host: localhost:12755&#xD;&#xA;Aeg-Data-Version: 1.0&#xD;&#xA;Aeg-Delivery-Count: 0&#xD;&#xA;Aeg-Event-Type: Notification&#xD;&#xA;Aeg-Metadata-Version: 1&#xD;&#xA;Aeg-Subscription-Name: ALL-EVENTS&#xD;&#xA;X-Forwarded-For: 20.189.108.187&#xD;&#xA;X-Forwarded-Host: 7cd1c703a1eb.ngrok-free.app&#xD;&#xA;X-Forwarded-Proto: https&#xD;&#xA;" />
+    </item>
+    <item name="APPL_MD_PATH">
+      <value string="/LM/W3SVC/3/ROOT" />
+    </item>
+    <item name="APPL_PHYSICAL_PATH">
+      <value string="C:\_dev\prs\OnCallPackage\TeamsApp\WebAPI\" />
+    </item>
+    <item name="AUTH_TYPE">
+      <value string="" />
+    </item>
+    <item name="AUTH_USER">
+      <value string="" />
+    </item>
+    <item name="AUTH_PASSWORD">
+      <value string="*****" />
+    </item>
+    <item name="LOGON_USER">
+      <value string="" />
+    </item>
+    <item name="REMOTE_USER">
+      <value string="" />
+    </item>
+    <item name="CERT_COOKIE">
+      <value string="" />
+    </item>
+    <item name="CERT_FLAGS">
+      <value string="" />
+    </item>
+    <item name="CERT_ISSUER">
+      <value string="" />
+    </item>
+    <item name="CERT_KEYSIZE">
+      <value string="" />
+    </item>
+    <item name="CERT_SECRETKEYSIZE">
+      <value string="" />
+    </item>
+    <item name="CERT_SERIALNUMBER">
+      <value string="" />
+    </item>
+    <item name="CERT_SERVER_ISSUER">
+      <value string="" />
+    </item>
+    <item name="CERT_SERVER_SUBJECT">
+      <value string="" />
+    </item>
+    <item name="CERT_SUBJECT">
+      <value string="" />
+    </item>
+    <item name="CONTENT_LENGTH">
+      <value string="1280" />
+    </item>
+    <item name="CONTENT_TYPE">
+      <value string="application/json; charset=utf-8" />
+    </item>
+    <item name="GATEWAY_INTERFACE">
+      <value string="CGI/1.1" />
+    </item>
+    <item name="HTTPS">
+      <value string="off" />
+    </item>
+    <item name="HTTPS_KEYSIZE">
+      <value string="" />
+    </item>
+    <item name="HTTPS_SECRETKEYSIZE">
+      <value string="" />
+    </item>
+    <item name="HTTPS_SERVER_ISSUER">
+      <value string="" />
+    </item>
+    <item name="HTTPS_SERVER_SUBJECT">
+      <value string="" />
+    </item>
+    <item name="INSTANCE_ID">
+      <value string="3" />
+    </item>
+    <item name="INSTANCE_META_PATH">
+      <value string="/LM/W3SVC/3" />
+    </item>
+    <item name="LOCAL_ADDR">
+      <value string="127.0.0.1" />
+    </item>
+    <item name="PATH_INFO">
+      <value string="/acs/events" />
+    </item>
+    <item name="PATH_TRANSLATED">
+      <value string="C:\_dev\prs\OnCallPackage\TeamsApp\WebAPI\acs\events" />
+    </item>
+    <item name="QUERY_STRING">
+      <value string="" />
+    </item>
+    <item name="REMOTE_ADDR">
+      <value string="127.0.0.1" />
+    </item>
+    <item name="REMOTE_HOST">
+      <value string="127.0.0.1" />
+    </item>
+    <item name="REMOTE_PORT">
+      <value string="35294" />
+    </item>
+    <item name="REQUEST_METHOD">
+      <value string="POST" />
+    </item>
+    <item name="SCRIPT_NAME">
+      <value string="/acs/events" />
+    </item>
+    <item name="SERVER_NAME">
+      <value string="localhost" />
+    </item>
+    <item name="SERVER_PORT">
+      <value string="12755" />
+    </item>
+    <item name="SERVER_PORT_SECURE">
+      <value string="0" />
+    </item>
+    <item name="SERVER_PROTOCOL">
+      <value string="HTTP/1.1" />
+    </item>
+    <item name="SERVER_SOFTWARE">
+      <value string="Microsoft-IIS/10.0" />
+    </item>
+    <item name="URL">
+      <value string="/acs/events" />
+    </item>
+    <item name="HTTP_CONTENT_LENGTH">
+      <value string="1280" />
+    </item>
+    <item name="HTTP_CONTENT_TYPE">
+      <value string="application/json; charset=utf-8" />
+    </item>
+    <item name="HTTP_ACCEPT_ENCODING">
+      <value string="gzip" />
+    </item>
+    <item name="HTTP_HOST">
+      <value string="localhost:12755" />
+    </item>
+    <item name="HTTP_AEG_DATA_VERSION">
+      <value string="1.0" />
+    </item>
+    <item name="HTTP_AEG_DELIVERY_COUNT">
+      <value string="0" />
+    </item>
+    <item name="HTTP_AEG_EVENT_TYPE">
+      <value string="Notification" />
+    </item>
+    <item name="HTTP_AEG_METADATA_VERSION">
+      <value string="1" />
+    </item>
+    <item name="HTTP_AEG_SUBSCRIPTION_NAME">
+      <value string="ALL-EVENTS" />
+    </item>
+    <item name="HTTP_X_FORWARDED_FOR">
+      <value string="20.189.108.187" />
+    </item>
+    <item name="HTTP_X_FORWARDED_HOST">
+      <value string="7cd1c703a1eb.ngrok-free.app" />
+    </item>
+    <item name="HTTP_X_FORWARDED_PROTO">
+      <value string="https" />
+    </item>
+  </serverVariables>
+</error>

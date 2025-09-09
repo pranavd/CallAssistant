@@ -1,0 +1,48 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.21/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.21",
+    "version": "1.0.0",
+    "id": "1ec0ef94-d738-48bc-ad93-da5ef6f632e2",
+    "developer": {
+        "name": "Self",
+        "websiteUrl": "https://c5580439ef5b.ngrok-free.app/",
+        "privacyUrl": "https://c5580439ef5b.ngrok-free.app/",
+        "termsOfUseUrl": "https://c5580439ef5b.ngrok-free.app/"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "On-Call App-1",
+        "full": "On-Call App-1"
+    },
+    "description": {
+        "short": "Short description of On-Call App",
+        "full": "Full description of On-Call App"
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [],
+    "composeExtensions": [],
+    "staticTabs": [
+        {
+            "entityId": "index0",
+            "name": "Home",
+            "contentUrl": "https://c5580439ef5b.ngrok-free.app/",
+            "websiteUrl": "https://c5580439ef5b.ngrok-free.app/",
+            "scopes": [
+                "personal",
+                "groupChat",
+                "team"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "c5580439ef5b.ngrok-free.app",
+        "localhost"
+    ]
+}
