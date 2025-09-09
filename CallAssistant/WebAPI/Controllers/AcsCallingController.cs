@@ -14,8 +14,7 @@ namespace WebAPI.Controllers
     [RoutePrefix("acs-calling")]
     public class AcsCallingController : ApiController
     {
-        private static String AcsConnectionString =
-            "";
+        private static string _acsConnectionString = Environment.GetEnvironmentVariable("ACS_CONNECTION_STRING");
 
         [Route("token")]
         [HttpGet]
@@ -23,7 +22,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var communicationIdentityClient = new CommunicationIdentityClient(AcsConnectionString);
+                var communicationIdentityClient = new CommunicationIdentityClient(_acsConnectionString);
                 var user = await communicationIdentityClient.CreateUserAsync();
                 var token = await communicationIdentityClient.GetTokenAsync(user, new List<CommunicationTokenScope>()
                 {

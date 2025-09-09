@@ -14,10 +14,10 @@ namespace WebAPI.Services
     public class GraphService
     {
         private GraphServiceClient _graphServiceClient = null;
-        private readonly string _clientId = ConfigurationManager.AppSettings["ClientId"];
-        private readonly string _clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
-        private readonly string _tenantId = ConfigurationManager.AppSettings["TenantId"];
-        private readonly string _host = ConfigurationManager.AppSettings["Host"];
+        private readonly string _clientId = Environment.GetEnvironmentVariable("APP_CLIENT_ID");
+        private readonly string _clientSecret = Environment.GetEnvironmentVariable("APP_CLIENT_SECRET");
+        private readonly string _tenantId = Environment.GetEnvironmentVariable("APP_CLIENT_TENANT");
+        private readonly string _host = Environment.GetEnvironmentVariable("HOST");
 
         public GraphService()
         {
