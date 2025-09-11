@@ -54,20 +54,17 @@ const CallingApp = () => {
 
         // Fetch token from backend
         try {
-            const response = await fetch(`${API_BASE_URL}/acs-calling/token`, {
-                method: 'GET'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch token');
+            const cachedTokenInfo = sessionStorage.getItem('acs_token');
+            if (!cachedTokenInfo) {
+                throw new Error("User not Signed In!");
             }
-            const data = await response.json();
-            console.log('response from /token', data);
-            await joinTeamsMeeting(data.Token);
+            const acsToken = JSON.parse(cachedTokenInfo).token;
+            
+            await joinTeamsMeeting(JSON.stringify(acsToken));
         } catch (error) {
-            console.log('error from /token', error);
             setNotifications([
                 ...notifications,
-                { id: Math.random(), message: 'Joining meeting failed' }
+                { id: Math.random(), message: `Joining meeting failed: ${JSON.stringify(error)}` }
             ]);
         }
     };
@@ -75,7 +72,7 @@ const CallingApp = () => {
     const joinTeamsMeeting = async (token) => {
         const callClient = new CallClient();
         const tokenCredential = new AzureCommunicationTokenCredential(token);
-        callAgent = await callClient.createCallAgent(tokenCredential, { displayName: botDisplayName });
+        callAgent = await callClient.createCallAgent(tokenCredential);
         call = callAgent.join({ meetingLink: meetingLink }, {});
 
         setNotifications([
@@ -200,12 +197,6 @@ const CallingApp = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
-            {/* Header */}
-            <header className="w-full py-6 bg-blue-900 text-white text-center shadow mb-8">
-                <h1 className="text-2xl font-bold tracking-wide">On-Call Bot</h1>
-                <p className="text-base mt-1">Join your MS Teams meeting, view live captions, and receive notifications</p>
-            </header>
-            {/* Main Content */}
             <div className="flex flex-1 w-full max-w-7xl mx-auto px-4 gap-8 mb-8">
                 {/* Left Column */}
                 <div className="flex flex-col w-full max-w-xs">
