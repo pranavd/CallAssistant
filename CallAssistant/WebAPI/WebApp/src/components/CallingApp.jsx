@@ -54,13 +54,12 @@ const CallingApp = () => {
 
         // Fetch token from backend
         try {
-            const cachedTokenInfo = sessionStorage.getItem('acs_token');
-            if (!cachedTokenInfo) {
+            const acsToken = sessionStorage.getItem('acs_token');
+            const acsUserId = sessionStorage.getItem('acs_user_id');
+            if (!acsToken && !acsUserId) {
                 throw new Error("User not Signed In!");
             }
-            const acsToken = JSON.parse(cachedTokenInfo).token;
-            
-            await joinTeamsMeeting(JSON.stringify(acsToken));
+            await joinTeamsMeeting(JSON.parse(acsToken));
         } catch (error) {
             setNotifications([
                 ...notifications,
@@ -72,7 +71,17 @@ const CallingApp = () => {
     const joinTeamsMeeting = async (token) => {
         const callClient = new CallClient();
         const tokenCredential = new AzureCommunicationTokenCredential(token);
-        callAgent = await callClient.createCallAgent(tokenCredential);
+        callAgent = await callClient.createTeamsCallAgent(tokenCredential);
+
+
+        callAgent.on('callsUpdated', (event) => {
+            console.log("calls updated event", event);
+        });
+
+        callAgent.on('incomingCall', (event) => {
+            console.log("calls incoming event", event);
+        });
+
         call = callAgent.join({ meetingLink: meetingLink }, {});
 
         setNotifications([
