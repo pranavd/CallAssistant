@@ -3,10 +3,11 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import { AzureCommunicationTokenCredential, getIdentifierRawId } from "@azure/communication-common";
 import { CommunicationIdentityClient } from "@azure/communication-identity";
 import { AzureLogger, setLogLevel } from "@azure/logger";
+import { VITE_ACS_CONNECTION_EP, VITE_ACS_CONNECTION_KEY, VITE_CLIENT_ID, VITE_TENANT_ID } from './envUtil'
 
-const CLIENT_ID = "0d484f5d-9a2f-437a-b4be-8ae9073c1536";
-const TENANT_ID = "599254d5-5f95-4f88-9bda-70ccd1dfe125";
-const ACS_CONNECTION_STRING = "endpoint=https://oncallbot-acs.unitedstates.communication.azure.com/;accesskey=1L9ZtnpnOO0kgE5BMwhwp5EnPZlCPQEgCTlbOnorXGPMfG2UEcb9JQQJ99BIACULyCphgowcAAAAAZCSakcV";
+const CLIENT_ID = VITE_CLIENT_ID;
+const TENANT_ID = VITE_TENANT_ID;
+const ACS_CONNECTION_STRING = `endpoint=${VITE_ACS_CONNECTION_EP}/;accesskey=${VITE_ACS_CONNECTION_KEY}`;
 
 const msalConfig = {
     auth: {
