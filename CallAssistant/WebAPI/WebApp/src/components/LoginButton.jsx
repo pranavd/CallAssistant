@@ -1,8 +1,8 @@
-import { getAcsTokenForTeams, getAcsTokenForGuestUser } from '../utils/loginUtil'
+import { requestAcsTokenForTeams, getAcsTokenForGuestUser } from '../utils/loginUtil'
 
 
 const loginUser = async () => {
-    await getAcsTokenForTeams();
+    await requestAcsTokenForTeams();
 }
 
 const LoginButton = () => {

@@ -187,6 +187,12 @@ const CallingApp = () => {
 
             if (call.state === "Connected") {
                 setIsCallConnected(true);
+                if (call.feature(Features.Recording).isRecordingActive) {
+
+                    setIsRecording(true);
+                } else {
+                    setIsRecording(false);
+                }
             }
         }
     }
@@ -237,7 +243,7 @@ const CallingApp = () => {
                                 onClick={handleJoin}
                                 disabled={!meetingLink}
                             >
-                                Join
+                                Connect
                             </button>
                             <button
                                 className="min-w-[120px] max-w-[160px] bg-red-700 text-white font-bold py-2 rounded hover:bg-red-700 transition"

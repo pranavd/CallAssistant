@@ -37,13 +37,16 @@ export async function getAcsTokenForGuestUser() {
     }
 }
 
-export async function getAcsTokenForTeams() {
+export async function requestAcsTokenForTeams() {
     try {
         const cachedToken = sessionStorage.getItem('acs_token');
         if (cachedToken) {
             // return cachedToken;
         }
         const aadResponse = await loginAndGetAADToken();
+
+        sessionStorage.setItem('aad_userInfo', JSON.stringify(aadResponse.account.username));
+
         const userId = await getIdentifierRawId({ microsoftTeamsUserId: aadResponse.uniqueId });
         const communicationIdentityClient = new CommunicationIdentityClient(ACS_CONNECTION_STRING);
         const acsToken = await communicationIdentityClient.getTokenForTeamsUser({
@@ -60,6 +63,10 @@ export async function getAcsTokenForTeams() {
         // const identityTokenResponse = await communicationIdentityClient.createUserAndToken(["voip"], { customId });
         // console.log(identityTokenResponse);
         // sessionStorage.setItem('acs_token', JSON.stringify(identityTokenResponse));
+        return {
+            aadUserInfo: aadResponse.account.username,
+            acsToken: acsToken
+        }
 
     } catch (error) {
         console.log("Error while getting acs token", error);
