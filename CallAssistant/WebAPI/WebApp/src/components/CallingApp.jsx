@@ -20,26 +20,31 @@ const CallingApp = () => {
 
     const [captions, setCaptions] = useState([]);
     const [notifications, setNotifications] = useState([]);
+    const [_participants, setParticipants] = useState([]);
+    const [organizer, setOrganizer] = useState(null);
 
     // Add ref for the captions container
     const captionsContainerRef = useRef(null);
+    const recordingStartedRef = useRef(false);
 
     useEffect(() => {
         if (isRecording) {
-            setNotifications([
-                ...notifications,
+            recordingStartedRef.current = true;
+            setNotifications(prev => [
+                ...prev,
                 { id: Math.random(), message: 'Recording Started' }
             ]);
             if (isCallConnected && !enabledCaptions) {
                 // enableCaptions();
             }
-        } else {
-            setNotifications([
-                ...notifications,
+        } else if (recordingStartedRef.current) {
+            // Only show "Recording Stopped" if recording was actually started before
+            setNotifications(prev => [
+                ...prev,
                 { id: Math.random(), message: 'Recording Stopped' }
             ]);
         }
-    }, [isRecording])
+    }, [isRecording, isCallConnected, enabledCaptions])
 
     useEffect(() => {
         if (captionsContainerRef.current && captions.length > 0) {
@@ -48,8 +53,8 @@ const CallingApp = () => {
     }, [captions]);
 
     const handleJoin = async () => {
-        setNotifications([
-            ...notifications,
+        setNotifications(prev => [
+            ...prev,
             { id: Math.random(), message: 'Joining meeting...' }
         ]);
 
@@ -58,8 +63,8 @@ const CallingApp = () => {
             const acsTokenInfo = await getAcsTokenForGuestUser();
             await joinTeamsMeeting(acsTokenInfo.token);
         } catch (error) {
-            setNotifications([
-                ...notifications,
+            setNotifications(prev => [
+                ...prev,
                 { id: Math.random(), message: `Joining meeting failed: ${JSON.stringify(error)}` }
             ]);
         }
@@ -81,8 +86,8 @@ const CallingApp = () => {
 
         call = callAgent.join({ meetingLink: meetingLink }, {});
 
-        setNotifications([
-            ...notifications,
+        setNotifications(prev => [
+            ...prev,
             { id: Math.random(), message: 'Joined meeting successfully.' }
         ]);
 
@@ -103,33 +108,49 @@ const CallingApp = () => {
         call.feature(Features.Recording).on('isRecordingActiveChanged', () => {
             onCallRecordingChanged();
         });
+
+        // Add participant event handlers
+        call.on('remoteParticipantsUpdated', (event) => {
+            onParticipantsUpdated(event);
+        });
+
+        // Initialize participants list
+        const currentParticipants = call.remoteParticipants;
+        setParticipants(Array.from(currentParticipants.values()));
+        
+        // Try to identify organizer (usually the first participant or one with specific properties)
+        if (currentParticipants.size > 0) {
+            const firstParticipant = Array.from(currentParticipants.values())[0];
+            setOrganizer(firstParticipant);
+            console.log('Organizer identified:', firstParticipant.displayName || 'Unknown');
+        }
     }
 
     const enableCaptions = async () => {
         try {
             if (isCallConnected) {
-                setNotifications([
-                    ...notifications,
+                setNotifications(prev => [
+                    ...prev,
                     { id: Math.random(), message: 'Starting captions' }
                 ]);
 
                 try {
                     await callCaptions.startCaptions({ spokenLanguage: 'en-us' });
                 } catch (error) {
-                    setNotifications([
-                        ...notifications,
+                    setNotifications(prev => [
+                        ...prev,
                         { id: Math.random(), message: `Captions Failed: ${JSON.stringify(error)}` }
                     ]);
                 }
             } else {
-                setNotifications([
-                    ...notifications,
+                setNotifications(prev => [
+                    ...prev,
                     { id: Math.random(), message: 'Captions cannot be started, Call should be Connected and Recording should be Started' }
                 ]);
             }
         } catch (error) {
-            setNotifications([
-                ...notifications,
+            setNotifications(prev => [
+                ...prev,
                 { id: Math.random(), message: 'Starting captions failed' }
             ]);
             console.log(error)
@@ -143,6 +164,15 @@ const CallingApp = () => {
                 ...prev,
                 { id: Math.random(), message: 'Left the meeting' }
             ]);
+            
+            // Reset call-related states
+            setIsCallConnected(false);
+            setIsRecording(false);
+            setEnabledCaptions(false);
+            setParticipants([]);
+            setOrganizer(null);
+            setCaptions([]);
+            recordingStartedRef.current = false;
         }
     };
 
@@ -163,8 +193,8 @@ const CallingApp = () => {
     const captionsActiveHandler = () => {
         console.log('call captions active: ', callCaptions);
         if (callCaptions.isCaptionsFeatureActive) {
-            setNotifications([
-                ...notifications,
+            setNotifications(prev => [
+                ...prev,
                 { id: Math.random(), message: `Capturing Captions` }
             ]);
             setEnabledCaptions(true);
@@ -173,13 +203,34 @@ const CallingApp = () => {
 
     const onCallStateChanged = () => {
         if (call) {
-            setNotifications([
-                ...notifications,
+            setNotifications(prev => [
+                ...prev,
                 { id: Math.random(), message: call.state }
             ]);
 
             if (call.state === "Connected") {
                 setIsCallConnected(true);
+                if (call.feature(Features.Recording).isRecordingActive) {
+                    setIsRecording(true);
+                } else {
+                    setIsRecording(false);
+                }
+            } else if (call.state === "Disconnected") {
+                // Reset all call-related states when call is disconnected
+                setIsCallConnected(false);
+                setIsRecording(false);
+                setEnabledCaptions(false);
+                setParticipants([]);
+                setOrganizer(null);
+                recordingStartedRef.current = false;
+                console.log('Call disconnected - states reset');
+            }
+        }
+    }
+
+    const onCallRecordingChanged = () => {
+        if (call) {
+            if (call.state === "Connected") {
                 if (call.feature(Features.Recording).isRecordingActive) {
 
                     setIsRecording(true);
@@ -190,16 +241,61 @@ const CallingApp = () => {
         }
     }
 
-    const onCallRecordingChanged = (event) => {
-        if (call) {
-            if (call.state === "Connected") {
-                if (call.feature(Features.Recording).isRecordingActive) {
+    const onParticipantsUpdated = (event) => {
+        const updatedParticipants = Array.from(call.remoteParticipants.values());
+        setParticipants(updatedParticipants);
 
-                    setIsRecording(true);
-                } else {
-                    setIsRecording(false);
-                }
+        // Check if organizer has left
+        if (organizer) {
+            const organizerStillPresent = updatedParticipants.find(
+                participant => participant.identifier.communicationUserId === organizer.identifier.communicationUserId
+            );
+
+            if (!organizerStillPresent) {
+                setNotifications(prev => [
+                    ...prev,
+                    { id: Math.random(), message: `Organizer "${organizer.displayName || 'Unknown'}" has left the meeting` }
+                ]);
+                
+                console.log('Organizer has left the meeting:', organizer);
             }
+        }
+
+        // Handle added participants
+        event.added.forEach(participant => {
+            setNotifications(prev => [
+                ...prev,
+                { id: Math.random(), message: `${participant.displayName || 'Unknown participant'} joined the meeting` }
+            ]);
+        });
+
+        // Handle removed participants
+        event.removed.forEach(participant => {
+            setNotifications(prev => [
+                ...prev,
+                { id: Math.random(), message: `${participant.displayName || 'Unknown participant'} left the meeting` }
+            ]);
+        });
+
+        // Check if ACS user is the only one left on the call
+        if (updatedParticipants.length === 0 && call && call.state === "Connected") {
+            setNotifications(prev => [
+                ...prev,
+                { id: Math.random(), message: 'All participants have left. Automatically disconnecting...' }
+            ]);
+            
+            console.log('All participants have left the meeting. Auto-disconnecting...');
+            
+            // Automatically hang up the call
+            setTimeout(() => {
+                if (call) {
+                    call.hangUp();
+                    setNotifications(prev => [
+                        ...prev,
+                        { id: Math.random(), message: 'Call disconnected - no participants remaining' }
+                    ]);
+                }
+            }, 2000); // Add a 2-second delay to allow notifications to show
         }
     }
 

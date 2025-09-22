@@ -31,7 +31,7 @@ export async function getAcsTokenForGuestUser() {
         const communicationIdentityClient = new CommunicationIdentityClient(ACS_CONNECTION_STRING);
         const user = await communicationIdentityClient.createUser();
         const tokenInfo = await communicationIdentityClient.getToken(user, ["voip.join", "voip"]);
-        return tokenInfo
+        return tokenInfo;
     } catch (error) {
         console.log("Error while getting ACS token for guest uer", error);
     }
