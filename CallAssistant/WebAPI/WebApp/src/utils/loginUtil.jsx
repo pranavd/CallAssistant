@@ -31,10 +31,17 @@ export async function getAcsTokenForGuestUser() {
         const communicationIdentityClient = new CommunicationIdentityClient(ACS_CONNECTION_STRING);
         const user = await communicationIdentityClient.createUser();
         const tokenInfo = await communicationIdentityClient.getToken(user, ["voip.join", "voip"]);
-        sessionStorage.setItem('acs_token', JSON.stringify(tokenInfo));
+        return tokenInfo
     } catch (error) {
         console.log("Error while getting ACS token for guest uer", error);
     }
+}
+
+export async function requestAcsTokenForGuestUser() {
+    const communicationIdentityClient = new CommunicationIdentityClient(ACS_CONNECTION_STRING);
+    const guestUser = await communicationIdentityClient.createUser();
+    const token = await communicationIdentityClient.getToken(guestUser, ["voip", "voip.join"]);
+    return token;
 }
 
 export async function requestAcsTokenForTeams() {

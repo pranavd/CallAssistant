@@ -32,9 +32,9 @@ function App() {
     }
   };
 
-  if (!isLoggedIn) {
-    return <LoginPage onLogin={handleLogin} />;
-  }
+  // if (!isLoggedIn) {
+  //   return <LoginPage onLogin={handleLogin} />;
+  // }
 
   return (
     <>
@@ -47,7 +47,7 @@ function App() {
           <span className="text-xl font-bold tracking-wide">On-Call Bot</span>
           <span className="text-base text-blue-100 mt-1">Join your MS Teams meeting, view live captions, and receive notifications</span>
         </div>
-        <LoginUser userName={userName} />
+        {/* <LoginUser  userName={userName} /> */}
       </nav>
 
       <Routes>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CallClient, Features } from "@azure/communication-calling";
 import { AzureCommunicationTokenCredential } from '@azure/communication-common';
+import {getAcsTokenForGuestUser} from '../utils/loginUtil'
 
 
 // const API_BASE_URL = window.location.origin;
@@ -30,7 +31,7 @@ const CallingApp = () => {
                 { id: Math.random(), message: 'Recording Started' }
             ]);
             if (isCallConnected && !enabledCaptions) {
-                enableCaptions();
+                // enableCaptions();
             }
         } else {
             setNotifications([
@@ -54,12 +55,8 @@ const CallingApp = () => {
 
         // Fetch token from backend
         try {
-            const acsToken = sessionStorage.getItem('acs_token');
-            const acsUserId = sessionStorage.getItem('acs_user_id');
-            if (!acsToken && !acsUserId) {
-                throw new Error("User not Signed In!");
-            }
-            await joinTeamsMeeting(JSON.parse(acsToken));
+            const acsTokenInfo = await getAcsTokenForGuestUser();
+            await joinTeamsMeeting(acsTokenInfo.token);
         } catch (error) {
             setNotifications([
                 ...notifications,
@@ -71,7 +68,7 @@ const CallingApp = () => {
     const joinTeamsMeeting = async (token) => {
         const callClient = new CallClient();
         const tokenCredential = new AzureCommunicationTokenCredential(token);
-        callAgent = await callClient.createTeamsCallAgent(tokenCredential);
+        callAgent = await callClient.createCallAgent(tokenCredential, {displayName: botDisplayName});
 
 
         callAgent.on('callsUpdated', (event) => {
@@ -118,11 +115,6 @@ const CallingApp = () => {
 
                 try {
                     await callCaptions.startCaptions({ spokenLanguage: 'en-us' });
-                    setNotifications([
-                        ...notifications,
-                        { id: Math.random(), message: 'Captions Started' }
-                    ]);
-                    setEnabledCaptions(true);
                 } catch (error) {
                     setNotifications([
                         ...notifications,
@@ -173,8 +165,9 @@ const CallingApp = () => {
         if (callCaptions.isCaptionsFeatureActive) {
             setNotifications([
                 ...notifications,
-                { id: Math.random(), message: `Captions Feature: ${callCaptions.isCaptionsFeatureActive}` }
+                { id: Math.random(), message: `Capturing Captions` }
             ]);
+            setEnabledCaptions(true);
         }
     }
 
