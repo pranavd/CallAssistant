@@ -111,6 +111,15 @@ const CallingApp = () => {
     const enableCaptions = async () => {
         try {
             if (isCallConnected) {
+
+                // callCaptions.off('CaptionsActiveChanged', () => {
+                //     captionsActiveHandler();
+                // });
+
+                callCaptions.on('CaptionsActiveChanged', () => {
+                    captionsActiveHandler();
+                });
+
                 setNotifications([
                     ...notifications,
                     { id: Math.random(), message: 'Starting captions' }
@@ -118,10 +127,6 @@ const CallingApp = () => {
 
                 try {
                     await callCaptions.startCaptions({ spokenLanguage: 'en-us' });
-                    setNotifications([
-                        ...notifications,
-                        { id: Math.random(), message: 'Captions Started' }
-                    ]);
                     setEnabledCaptions(true);
                 } catch (error) {
                     setNotifications([
@@ -173,7 +178,7 @@ const CallingApp = () => {
         if (callCaptions.isCaptionsFeatureActive) {
             setNotifications([
                 ...notifications,
-                { id: Math.random(), message: `Captions Feature: ${callCaptions.isCaptionsFeatureActive}` }
+                { id: Math.random(), message: `Captions Started: ${callCaptions.isCaptionsFeatureActive}` }
             ]);
         }
     }
